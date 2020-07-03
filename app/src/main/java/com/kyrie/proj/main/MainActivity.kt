@@ -10,6 +10,11 @@ class MainActivity : BaseActivity(), MainActivityLogic.ActivityProvider {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        activityLogic = MainActivityLogic(this)
+        activityLogic = MainActivityLogic(this, savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        activityLogic?.onSaveInstanceState(outState)
     }
 }

@@ -1,6 +1,7 @@
 package com.kyrie.proj.main.logic;
 
 import android.content.res.Resources;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.IdRes;
@@ -21,6 +22,8 @@ import com.wzt.ui.tab.bottom.HiTabBottomInfo;
 import com.wzt.ui.tab.bottom.HiTabBottomLayout;
 import com.wzt.ui.tab.common.IHiTabLayout;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +33,18 @@ import java.util.List;
  * 内聚MainActivity的逻辑
  */
 public class MainActivityLogic {
+    private final static String SAVED_CURRENT_ID = "SAVED_CURRENT_ID";
     private HiFragmentTabView fragmentTabView;
     private HiTabBottomLayout hiTabBottomLayout;
     private List<HiTabBottomInfo<?>> infoList;
     private ActivityProvider activityProvider;
+    private int currIndex;
 
-    public MainActivityLogic(ActivityProvider activityProvider) {
+    public MainActivityLogic(ActivityProvider activityProvider, Bundle savedInstanceState) {
         this.activityProvider = activityProvider;
+        if (savedInstanceState != null) {
+            currIndex = savedInstanceState.getInt(SAVED_CURRENT_ID);
+        }
         initTabBottom();
     }
 
@@ -102,15 +110,20 @@ public class MainActivityLogic {
             @Override
             public void onTabSelectedChange(int index, @Nullable HiTabBottomInfo<?> prevInfo, @NonNull HiTabBottomInfo<?> nextInfo) {
                 fragmentTabView.setCurrentItem(index);
+                currIndex = index;
             }
         });
-        hiTabBottomLayout.defaultSelected(homeInfo);
+        hiTabBottomLayout.defaultSelected(infoList.get(currIndex));
     }
 
     private void initFragmentTabView() {
         HiTabViewAdapter tabViewAdapter = new HiTabViewAdapter(infoList, activityProvider.getSupportFragmentManager());
         fragmentTabView = activityProvider.findViewById(R.id.fragment_tab_view);
         fragmentTabView.setAdapter(tabViewAdapter);
+    }
+
+    public void onSaveInstanceState(@NotNull Bundle outState) {
+        outState.putInt(SAVED_CURRENT_ID, currIndex);
     }
 
     /**
