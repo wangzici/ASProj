@@ -11,12 +11,12 @@ import com.wzt.ui.tab.bottom.HiTabBottomInfo
  *
  */
 class HiTabViewAdapter(
-    private val mInfoList: MutableList<HiTabBottomInfo<Int>>,
+    private val mInfoList: MutableList<HiTabBottomInfo<*>>,
     private val mFragmentManager: FragmentManager
 ) {
     var currFragment : Fragment? = null
 
-    public fun instantiateItem(container: View, position: Int) {
+    fun instantiateItem(container: View, position: Int) {
         val transaction = mFragmentManager.beginTransaction()
         currFragment?.let {
             transaction.hide(it)
